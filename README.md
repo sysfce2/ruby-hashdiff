@@ -1,4 +1,4 @@
-# Hashdiff [![Build Status](https://secure.travis-ci.org/liufengyun/hashdiff.svg)](http://travis-ci.org/liufengyun/hashdiff) [![Gem Version](https://badge.fury.io/rb/hashdiff.svg)](http://badge.fury.io/rb/hashdiff)
+# Hashdiff [![Build Status](https://github.com/liufengyun/hashdiff/workflows/ci/badge.svg)](https://github.com/liufengyun/hashdiff/actions?query=workflow%3Aci) [![Gem Version](https://badge.fury.io/rb/hashdiff.svg)](http://badge.fury.io/rb/hashdiff)
 
 Hashdiff is a ruby library to compute the smallest difference between two hashes.
 
@@ -94,9 +94,8 @@ Hashdiff.unpatch!(b, diff).should == a
 
 ### Options
 
-There are eight options available: `:delimiter`, `:similarity`,
-`:strict`, `:indifferent`, `:numeric_tolerance`, `:strip`, `:case_insensitive`,
-`:array_path` and `:use_lcs`
+The following options are available: `:delimiter`, `:similarity`, `:strict`, `:ignore_keys`,
+`:indifferent`, `:numeric_tolerance`, `:strip`, `:case_insensitive`, `:array_path` and `:use_lcs`
 
 #### `:delimiter`
 
@@ -117,6 +116,29 @@ In cases where you have similar hash objects in arrays, you can pass a custom va
 #### `:strict`
 
 The `:strict` option, which defaults to `true`, specifies whether numeric types are compared on type as well as value.  By default, an Integer will never be equal to a Float (e.g. 4 != 4.0).  Setting `:strict` to false makes the comparison looser (e.g. 4 == 4.0).
+
+#### `:ignore_keys`
+
+The `:ignore_keys` option allows you to specify one or more keys to ignore, which defaults to `[]` (none). Ignored keys are ignored at all levels in both hashes. For example:
+
+```ruby
+a = { a: 4, g: 0, b: { a: 5, c: 6, e: 1 }       }
+b = {             b: { a: 7, c: 3, f: 1 }, d: 8 }
+diff = Hashdiff.diff(a, b, ignore_keys: %i[a f])
+diff.should == [['-', 'g', 0], ['-', 'b.e', 1], ['~', 'b.c', 6, 3], ['+', 'd', 8]]
+```
+If you wish instead to ignore keys at a particlar level you should
+use a [custom comparison method](https://github.com/liufengyun/hashdiff#specifying-a-custom-comparison-method) instead. For example to diff only at the 2nd level of both hashes:
+
+```ruby
+a = { a: 4, g: 0, b: { a: 5, c: 6, e: 1 }       }
+b = {             b: { a: 7, c: 3, f: 1 }, d: 8 }
+diff = Hashdiff.diff(a, b) do |path, _e, _a|
+  arr = path.split('.')
+  true if %w[a f].include?(arr.last) && arr.size == 2 # note '.' is the default delimiter
+end
+diff.should == [['-', 'a', 4], ['-', 'g', 0], ['-', 'b.e', 1], ['~', 'b.c', 6, 3], ['+', 'd', 8]]
+```
 
 #### `:indifferent`
 

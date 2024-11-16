@@ -1,5 +1,24 @@
 # Change Log
 
+## v1.1.2 2024-11-12
+
+* Fix bundler cache #96 (@olleolleolle)
+* Quote the '3.0' in YAML #95 (@olleolleolle)
+* Fix version in source code #97 (@liufengyun)
+
+## v1.1.1 2024-08-02
+
+* Fix bug in ignore_keys option #88 (@Matzfan)
+* Exclude spec files from gem package #94 (@amatsuda)
+
+## v1.1.0 2023-12-14
+
+* Add ignore_keys option (#86 @Matzfan)
+* Remove pinned version of rake < 11
+* Bump rspec dep ~> 3.5
+* Bump rubocop dep >= 1.52.1
+* Bump rubocop-rspec dep > 1.16.0
+
 ## v1.0.1 2020-02-25
 
 * Add indifferent option

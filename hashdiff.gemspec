@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.summary     = ' Hashdiff is a diff lib to compute the smallest difference between two hashes. '
   s.description = ' Hashdiff is a diff lib to compute the smallest difference between two hashes. '
 
-  s.files         = `git ls-files`.split("\n")
+  s.files         = `git ls-files`.split("\n").grep_v(%r{^spec/})
   s.test_files    = `git ls-files -- Appraisals {spec}/*`.split("\n")
 
   s.require_paths = ['lib']
@@ -22,9 +22,9 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/liufengyun/hashdiff'
 
   s.add_development_dependency('bluecloth')
-  s.add_development_dependency('rspec', '~> 2.0')
-  s.add_development_dependency('rubocop', '~> 0.49.1') # last version that works with ruby 2.0
-  s.add_development_dependency('rubocop-rspec')
+  s.add_development_dependency('rspec', '~> 3.5')
+  s.add_development_dependency('rubocop', '>= 1.52.1') # earliest version that works with Ruby 3.3
+  s.add_development_dependency('rubocop-rspec', '> 1.16.0') # https://github.com/rubocop/rubocop-rspec/issues/461
   s.add_development_dependency('yard')
 
   if s.respond_to?(:metadata)
